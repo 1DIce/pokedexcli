@@ -37,8 +37,13 @@ func getCliCommands() map[string]cliCommand {
 		},
 		"explore": {
 			name:        "explore",
-			description: "Lists all Pokemon in a given area",
+			description: "Lists all Pokemon in a given area or area id",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Catch Pokemon with a given name or id",
+			callback:    commandCatch,
 		},
 	}
 }
@@ -47,9 +52,7 @@ func main() {
 	inputScanner := bufio.NewScanner(os.Stdin)
 
 	availableCommands := getCliCommands()
-	config := Config{
-		LocationArea: LocationAreaConfig{},
-	}
+	config := NewConfig()
 
 	for {
 		fmt.Print("Pokedex > ")

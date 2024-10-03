@@ -1,9 +1,11 @@
-package pokecache
+package pokecache_test
 
 import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/1DIce/pokedexcli/pokecache"
 )
 
 type mockEntry struct {
@@ -46,7 +48,7 @@ func TestAddGet(t *testing.T) {
 func TestReapLoop(t *testing.T) {
 	const baseTime = 5 * time.Millisecond
 	const waitTime = baseTime + 5*time.Millisecond
-	cache := NewCache[mockEntry](baseTime)
+	cache := pokecache.NewCache[mockEntry](baseTime)
 	cache.Set("https://example.com", mockEntry{v: "testdata"})
 
 	_, ok := cache.Get("https://example.com")

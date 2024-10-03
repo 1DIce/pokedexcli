@@ -4,12 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(config *Config) error
+	callback    func(config *Config, arguments []string) error
 }
 
 func getCliCommands() map[string]cliCommand {
@@ -34,6 +35,11 @@ func getCliCommands() map[string]cliCommand {
 			description: "Display the previous 20 location areas",
 			callback:    commandMapB,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Lists all Pokemon in a given area",
+			callback:    commandExplore,
+		},
 	}
 }
 
@@ -54,13 +60,14 @@ func main() {
 
 		input := inputScanner.Text()
 
-		command, ok := availableCommands[input]
+		arguments := strings.Split(input, " ")
+		command, ok := availableCommands[arguments[0]]
 		if !ok {
 			fmt.Printf("'%s' is not a valid command!\n", input)
 			continue
 		}
 
-		err := command.callback(&config)
+		err := command.callback(&config, arguments[1:])
 		if err != nil {
 			fmt.Printf("Error during command execution %v\n", err)
 		}

@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
+
+	funk "github.com/thoas/go-funk"
 
 	pokecache "github.com/1DIce/pokedexcli/pokecache"
 )
@@ -20,7 +24,7 @@ func getLocationsCache() *pokecache.Cache[locationAreasResponse] {
 	return locationAreasCache
 }
 
-func GetLocationAreas(index uint) (LocationAreas, error) {
+func FetchLocationAreas(index uint) (LocationAreas, error) {
 	url := getAreasUrl(index)
 
 	cachedResponse, ok := getLocationsCache().Get(url)
@@ -62,6 +66,21 @@ func toLocationAreas(response locationAreasResponse, pageIndex uint) LocationAre
 	return LocationAreas{
 		CurrentPageIndex: pageIndex,
 		LastPageIndex:    uint(lastPage),
-		Areas:            response.Results,
+		Areas:            toLocationAreaInfos(response.Results),
 	}
+}
+
+func toLocationAreaInfos(from []locationArea) []LocationAreaInfo {
+	result := make([]LocationAreaInfo, 0)
+	for _, l := range from {
+		splits := strings.Split(l.URL, "/")
+		splits = funk.FilterString(splits, func(s string) bool { return s != "" })
+		idString := splits[len(splits)-1]
+		id, err := strconv.Atoi(idString)
+		if err != nil {
+			panic(err)
+		}
+		result = append(result, LocationAreaInfo{Name: l.Name, Id: id})
+	}
+	return result
 }

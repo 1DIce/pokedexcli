@@ -7,7 +7,7 @@ import (
 	pokeapi "github.com/1DIce/pokedexcli/poke_api"
 )
 
-func commandMap(config *Config) error {
+func commandMap(config *Config, arguments []string) error {
 	if config == nil {
 		log.Fatal("config was nil")
 	}
@@ -23,7 +23,7 @@ func commandMap(config *Config) error {
 		fmt.Println("")
 	}
 
-	response, err := pokeapi.GetLocationAreas(nextPage)
+	response, err := pokeapi.FetchLocationAreas(nextPage)
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func commandMap(config *Config) error {
 	fmt.Printf("\nLocations page %d of %d:\n\n", response.CurrentPageIndex+1, response.LastPageIndex+1)
 
 	for _, result := range response.Areas {
-		fmt.Println(result.Name)
+		fmt.Printf("%d - %s\n", result.Id, result.Name)
 	}
 
 	fmt.Println("")

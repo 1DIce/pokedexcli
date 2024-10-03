@@ -1,6 +1,6 @@
 package pokeapi
 
-type LocationArea struct {
+type locationArea struct {
 	Name string `json:"name"`
 	URL  string `json:"url"`
 }
@@ -9,11 +9,16 @@ type locationAreasResponse struct {
 	Count    int            `json:"count"`
 	Next     *string        `json:"next"`
 	Previous *string        `json:"previous"`
-	Results  []LocationArea `json:"results"`
+	Results  []locationArea `json:"results"`
+}
+
+type LocationAreaInfo struct {
+	Name string
+	Id   int
 }
 
 type LocationAreas struct {
 	CurrentPageIndex uint
 	LastPageIndex    uint
-	Areas            []LocationArea
+	Areas            []LocationAreaInfo
 }

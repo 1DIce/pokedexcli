@@ -14,11 +14,11 @@ func commandCatch(config *Config, arguments []string) error {
 	}
 
 	if len(arguments) == 0 {
-		fmt.Println("Error: No location name given")
+		fmt.Println("Error: No pokemon name or id given")
 	}
 
 	if len(arguments) > 1 {
-		fmt.Println("Error: To many location names given! Input only a single location name")
+		fmt.Println("Error: To many arguments given! Input only a single pokemon name or id")
 	}
 
 	pokemonNameOrId := arguments[0]

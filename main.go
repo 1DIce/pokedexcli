@@ -9,27 +9,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
-}
-
-func commandHelp() error {
-	commands := getCliCommands()
-
-	fmt.Println("")
-	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:")
-	fmt.Println("")
-
-	for _, command := range commands {
-		fmt.Printf("%s:\t %s\n", command.name, command.description)
-	}
-	fmt.Println("")
-	return nil
-}
-
-func commandExit() error {
-	os.Exit(0)
-	return nil
+	callback    func(config *Config) error
 }
 
 func getCliCommands() map[string]cliCommand {
@@ -37,12 +17,22 @@ func getCliCommands() map[string]cliCommand {
 		"help": {
 			name:        "help",
 			description: "Displays a help message",
-			callback:    func() error { return commandHelp() },
+			callback:    commandHelp,
 		},
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
-			callback:    func() error { return commandExit() },
+			callback:    commandExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Display the next 20 location areas",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Display the previous 20 location areas",
+			callback:    commandMapB,
 		},
 	}
 }
@@ -51,6 +41,9 @@ func main() {
 	inputScanner := bufio.NewScanner(os.Stdin)
 
 	availableCommands := getCliCommands()
+	config := Config{
+		LocationArea: LocationAreaConfig{},
+	}
 
 	for {
 		fmt.Print("Pokedex > ")
@@ -67,7 +60,7 @@ func main() {
 			continue
 		}
 
-		err := command.callback()
+		err := command.callback(&config)
 		if err != nil {
 			fmt.Printf("Error during command execution %v\n", err)
 		}
